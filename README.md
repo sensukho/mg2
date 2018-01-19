@@ -4,9 +4,9 @@
 
 ### Apache 2.4 + PHP 7.0 + OPCache + MariaDB + N98 Magerun 2 + XDebug + Redis
 
-[![Build Status](https://travis-ci.org/clean-docker/Magento2.svg?branch=master)](https://travis-ci.org/clean-docker/Magento2)
-[![Build Status](https://images.microbadger.com/badges/image/rafaelcgstz/magento2.svg)](https://microbadger.com/images/rafaelcgstz/magento2)
-[![Releases](https://img.shields.io/github/release/clean-docker/Magento2.svg)](https://github.com/clean-docker/Magento2/releases)
+[![Build Status](https://travis-ci.org/sensukho/mg2.svg?branch=master)](https://travis-ci.org/sensukho/mg2)
+[![Build Status](https://images.microbadger.com/badges/image/sensukho/mg2-stack.svg)](https://microbadger.com/images/sensukho/mg2-stack)
+[![Releases](https://img.shields.io/github/release/sensukho/mg2-stack.svg)](https://github.com/sensukho/mg2/releases)
 
 ### Requirements
 
