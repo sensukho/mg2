@@ -2,7 +2,6 @@ version: '2'
 services:
   apache:
     image: sensukho/mg2-stack
-    # build: .
     ports:
       - "80:80"
       - "9001:9000"
