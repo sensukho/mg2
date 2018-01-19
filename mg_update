@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+bash magento setup:upgrade
+bash magento cache:flush
+sudo chmod -R 777 src
