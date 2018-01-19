@@ -22,18 +22,28 @@ Install [Docker](https://docs.docker.com/docker-for-windows/install/), [Docker-c
 
 Install [Docker](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/) and [Docker-compose](https://docs.docker.com/compose/install/#install-compose).
 
-### How to use
+# How to use
 
-Execute in your terminal, change the *MYMAGENTO2* to use the name of your project:
+### Features commands
 
-```
-curl -s https://raw.githubusercontent.com/clean-docker/Magento2/master/init | bash -s MYMAGENTO2 clone
-```
+| Commands  | Description  | Options & Examples |
+|---|---|---|
+| `./init`  | Use this command to set the name of the project and configure/run the environment.  | `./init <PROJECT-NAME>` |
+| `./start`  | You can start your container manually (after run once .init)  | |
+| `./stop`  | Stop your project containers  | |
+| `./kill`  | Stops containers and removes containers, networks, volumes, and images created to the specific project  | |
+| `./shell`  | Access your container  | `./shell root` | |
+| `./magento`  | Use the power of the Magento CLI  | |
+| `./n98`  | Use the Magerun commands as you want | |
+| `./grunt-init`  | Prepare to use Grunt  | |
+| `./grunt`  | Use Grunt specifically in your theme or completely, it'll do the deploy and the watcher.  | `./grunt luma` |
+| `./xdebug`  |  Enable / Disable the XDebug | |
+| `./composer`  |  Use Composer commands | `./composer update` |
 
 If you want to install the Magento 2, use like that:
 
 ```
-cd MYMAGENTO2
+cd <PROJECT-NAME>
 ./shell
 rm index.php
 install-magento2
@@ -50,22 +60,6 @@ Enjoy your new panels!
 **PHPMyAdmin:** http://localhost:8080
 
 **Local emails:** http://localhost:8025
-
-### Features commands
-
-| Commands  | Description  | Options & Examples |
-|---|---|---|
-| `./init`  | If you didn't use the CURL setup command above, please use this command changing the name of the project.  | `./init MYMAGENTO2` |
-| `./start`  | If you continuing not using the CURL you can start your container manually  | |
-| `./stop`  | Stop your project containers  | |
-| `./kill`  | Stops containers and removes containers, networks, volumes, and images created to the specific project  | |
-| `./shell`  | Access your container  | `./shell root` | |
-| `./magento`  | Use the power of the Magento CLI  | |
-| `./n98`  | Use the Magerun commands as you want | |
-| `./grunt-init`  | Prepare to use Grunt  | |
-| `./grunt`  | Use Grunt specifically in your theme or completely, it'll do the deploy and the watcher.  | `./grunt luma` |
-| `./xdebug`  |  Enable / Disable the XDebug | |
-| `./composer`  |  Use Composer commands | `./composer update` |
 
 ### License
 
