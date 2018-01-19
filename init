@@ -8,6 +8,7 @@ git config --global diff.renamelimit 5000
 docker image pull sensukho/mg2-stack
 
 git checkout -f master;
+cp docker-compose-dis.yml docker-compose.yml
 sed -i '' -e "s/<project_name>/$1/g" docker-compose.yml;
 
 if [ ! -d src ]; then
