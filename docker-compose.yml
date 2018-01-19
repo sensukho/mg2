@@ -23,7 +23,7 @@ services:
   db:
     image: mariadb
     ports:
-     - 3300:3306
+     - 3306:3306
     environment:
       - MYSQL_ROOT_PASSWORD=Sw33th0n3y
       - MYSQL_DATABASE=<project_name>
