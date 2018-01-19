@@ -25,10 +25,10 @@ services:
     ports:
      - 3300:3306
     environment:
-      - MYSQL_ROOT_PASSWORD='Sw33th0n3y'
-      - MYSQL_DATABASE='<project_name>'
-      - MYSQL_USER='<project_name>'
-      - MYSQL_PASSWORD='u546u1.$'
+      - MYSQL_ROOT_PASSWORD=Sw33th0n3y
+      - MYSQL_DATABASE=<project_name>
+      - MYSQL_USER=<project_name>
+      - MYSQL_PASSWORD=u546u132
     volumes:
       - dbdata:/var/lib/mysql
     networks:
@@ -37,10 +37,10 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     environment:
-     - PMA_HOST='db'
-     - PMA_USER='root'
-     - PMA_PASSWORD='Sw33th0n3y'
-     - MYSQL_ROOT_PASSWORD='Sw33th0n3y'
+     - PMA_HOST=db
+     - PMA_USER=root
+     - PMA_PASSWORD=Sw33th0n3y
+     - MYSQL_ROOT_PASSWORD=Sw33th0n3y
     ports:
      - 8080:80
     networks:
