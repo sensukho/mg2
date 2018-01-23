@@ -60,7 +60,3 @@ Enjoy your new panels!
 **PHPMyAdmin:** http://localhost:8080
 
 **Local emails:** http://localhost:8025
-
-### License
-
-MIT © 2018 [Rafael Corrêa Gomes](https://github.com/rafaelstz/) and [contributors](https://github.com/clean-docker/Magento2/graphs/contributors).
