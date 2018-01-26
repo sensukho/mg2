@@ -1,4 +1,3 @@
 #!/usr/bin/env bash
-bash magento setup:upgrade
-bash magento cache:flush
-sudo chmod -R 777 src
+
+docker-compose exec --user root apache bash -c "php -f bin/magento setup:upgrade; php -f bin/magento cache:flush; sudo chmod -R 777 ."
