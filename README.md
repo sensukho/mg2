@@ -26,7 +26,7 @@ Install [Docker](https://docs.docker.com/engine/installation/linux/docker-ce/ubu
 
 ### Features commands
 
-| Commands ( make <cmd>)  | Description  | Options & Examples |
+| Commands | Description  | Options & Examples |
 |---|---|---|
 | `create`  | Use this command to set the name of the project and configure/run the environment.  | `make create NAME=<PROJECT-NAME>` |
 | `start`  | You can start your container manually (after run once .init)  | |
