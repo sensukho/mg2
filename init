@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 
-git config --global core.autocrlf false
-git config --global core.eol LF
 git config --global core.fileMode false
-git config --global diff.renamelimit 5000
 
 docker image pull sensukho/mg2-stack
 
-git checkout -f master;
 cp docker-compose-dis.yml docker-compose.yml
 sed -i '' -e "s/<project_name>/$1/g" docker-compose.yml;
 
@@ -16,14 +12,7 @@ if [ ! -d src ]; then
   echo "<?php phpinfo();" > src/index.php;
 fi
 
-if [ -d src/app/etc ]; then  
-  if [ ! -e src/app/etc/env.php ]; then
-    cp .docker/users/env.sample.php src/app/etc/env.php;
-  fi
-fi
-
-chmod -R 777 src
-
+echo "sudo chmod -R u+x ./*"
 sudo chmod -R u+x ./*
 
 bash start

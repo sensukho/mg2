@@ -26,19 +26,20 @@ Install [Docker](https://docs.docker.com/engine/installation/linux/docker-ce/ubu
 
 ### Features commands
 
-| Commands  | Description  | Options & Examples |
+| Commands ( make <cmd>)  | Description  | Options & Examples |
 |---|---|---|
-| `./init`  | Use this command to set the name of the project and configure/run the environment.  | `./init <PROJECT-NAME>` |
-| `./start`  | You can start your container manually (after run once .init)  | |
-| `./stop`  | Stop your project containers  | |
-| `./kill`  | Stops containers and removes containers, networks, volumes, and images created to the specific project  | |
-| `./shell`  | Access your container  | `./shell root` | |
-| `./magento`  | Use the power of the Magento CLI  | |
-| `./n98`  | Use the Magerun commands as you want | |
+| `create`  | Use this command to set the name of the project and configure/run the environment.  | `make create NAME=<PROJECT-NAME>` |
+| `start`  | You can start your container manually (after run once .init)  | |
+| `stop`  | Stop your project containers  | |
+| `kill`  | Stops containers and removes containers, networks, volumes, and images created to the specific project  | |
+| `mg_in`  | Access your container  | |
+| `mg_run`  | Use the power of the Magento CLI  | `make mg_run CMD=list` |
+| `mg_n98`  | Use the Magerun commands as you want | `make mg_n98 CMD=list` |
 | `./grunt-init`  | Prepare to use Grunt  | |
 | `./grunt`  | Use Grunt specifically in your theme or completely, it'll do the deploy and the watcher.  | `./grunt luma` |
-| `./xdebug`  |  Enable / Disable the XDebug | |
-| `./composer`  |  Use Composer commands | `./composer update` |
+| `mg_xdebug`  |  Enable / Disable the XDebug | |
+| `mg_composer`  |  Use Composer commands | `make mg_composer CMD=update` |
+| `mg_update`  |  Update DB and flush cache | |
 
 If you want to install the Magento 2, use like that:
 

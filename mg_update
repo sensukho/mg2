@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-docker-compose exec --user root apache bash -c "php -f bin/magento setup:upgrade; php -f bin/magento cache:flush; sudo chmod -R 777 ."
