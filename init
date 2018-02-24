@@ -2,7 +2,7 @@
 
 git config --global core.fileMode false
 
-docker image pull sensukho/mg2-stack
+docker image pull sensukho/mg2-stack:v1
 
 cp docker-compose-dis.yml docker-compose.yml
 sed -i '' -e "s/<project_name>/$1/g" docker-compose.yml;
