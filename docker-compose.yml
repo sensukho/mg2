@@ -1,0 +1,76 @@
+version: '2'
+services:
+  apache:
+    image: sensukho/mg2-stack
+    ports:
+      - "80:80"
+      - "9001:9000"
+    volumes:
+      - ./src:/var/www/html
+      - ~/.composer:/var/www/.composer
+      - ~/.npm:/var/www/.npm
+    environment:
+      XDEBUG_CONFIG: "remote_host=localhost"
+      PHP_IDE_CONFIG: "serverName=Docker"
+    depends_on:
+      - db
+    links:
+      - db
+    networks:
+      - <project_name>-network
+
+  db:
+    image: mariadb
+    ports:
+     - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=Sw33th0n3y
+      - MYSQL_DATABASE=<project_name>
+      - MYSQL_USER=<project_name>
+      - MYSQL_PASSWORD=u546u132
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - <project_name>-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+     - PMA_HOST=db
+     - PMA_USER=root
+     - PMA_PASSWORD=Sw33th0n3y
+     - MYSQL_ROOT_PASSWORD=Sw33th0n3y
+    ports:
+     - 8080:80
+    networks:
+      - <project_name>-network
+
+  redis:
+    image: redis
+    ports:
+     - 6379
+    networks:
+      - <project_name>-network
+
+  redis-session:
+    image: redis
+    ports:
+     - 6379
+    networks:
+      - <project_name>-network
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks:
+      - <project_name>-network
+
+networks:
+  <project_name>-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
