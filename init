@@ -15,4 +15,4 @@ fi
 
 chmod -R 777 src
 
-bash start
+Make start
