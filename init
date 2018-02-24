@@ -2,9 +2,10 @@
 
 git config --global core.fileMode false
 
+sudo chmod -R u+x ./*
+
 docker image pull sensukho/mg2-stack:v1
 
-cp docker-compose-dis.yml docker-compose.yml
 sed -i '' -e "s/<project_name>/$1/g" docker-compose.yml;
 
 if [ ! -d src ]; then
@@ -12,7 +13,6 @@ if [ ! -d src ]; then
   echo "<?php phpinfo();" > src/index.php;
 fi
 
-echo "sudo chmod -R u+x ./*"
-sudo chmod -R u+x ./*
+chmod -R 777 src
 
 bash start
