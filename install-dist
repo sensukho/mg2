@@ -2,20 +2,19 @@
 
 PROJECT=<project_name>
 
-if [ -d src ]; then
-  sudo rm-rf src;
+if [ "$1" == "1" ]; then
+  sudo rm -rf src;
+  git clone https://github.com/magento/magento2.git src
+  cd src
+  git checkout 2.1-develop
+  git pull origin 2.1-develop
+  chmod -R 777 var
+  cd ..
 fi
-
-git clone https://github.com/magento/magento2.git src
-cd src
-git checkout 2.1-develop
-git pull origin 2.1-develop
-cd ..
-chmod -R 777 var
 
 make mg_run CMD="composer config repositories.0 composer https://repo.magento.com"
 make mg_run CMD="composer install"
 make mg_run CMD="composer update"
 make mg_exe CMD="sampledata:deploy"
-make mg_exe CMD="setup:install --base-url=http://$PROJECT.test --db-host=localhost --db-name=$PROJECT --db-user=root --db-password=Sw33th0n3y --admin-firstname=Magento --admin-lastname=$PROJECT --admin-email=$PROJECT@example.com --admin-user=admin --admin-password=admin123 --language=en_US --currency=USD --timezone=America/Chicago --use-rewrites=1"
-make mg_exe CMD="setup:upgrade"
+#make mg_exe CMD="setup:install --base-url=http://$PROJECT.test --db-host=localhost --db-name=$PROJECT --db-user=root --db-password=Sw33th0n3y --admin-firstname=Magento --admin-lastname=$PROJECT --admin-email=$PROJECT@example.com --admin-user=admin --admin-password=admin123 --language=en_US --currency=USD --timezone=America/Chicago --use-rewrites=1"
+#make mg_exe CMD="setup:upgrade"
