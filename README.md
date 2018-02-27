@@ -28,7 +28,9 @@ Install [Docker](https://docs.docker.com/engine/installation/linux/docker-ce/ubu
 
 | Commands | Description  | Options & Examples |
 |---|---|---|
+| `new`  | Use this command to setup new M2 project and configure/run the environment.  | `make new NAME=<PROJECT-NAME> CLONE=1` |
 | `create`  | Use this command to set the name of the project and configure/run the environment.  | `make create NAME=<PROJECT-NAME>` |
+| `install`  | Use this command to setup M2 project.  | `make install CLONE=1` |
 | `start`  | You can start your container manually (after run once .init)  | |
 | `stop`  | Stop your project containers  | |
 | `kill`  | Stops containers and removes containers, networks, volumes, and images created to the specific project  | |
