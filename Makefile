@@ -21,7 +21,9 @@ activity:
 mg_in:
 	$(BIN_DOCKER_COMPOSE) exec --user root apache bash
 mg_run:
-	$(BIN_DOCKER_COMPOSE) exec --user www-data apache /var/www/html/bin/magento $(CMD)
+	$(BIN_DOCKER_COMPOSE) exec --user www-data apache $(CMD)
+mg_exe:
+	$(BIN_DOCKER_COMPOSE) exec --user www-data apache bin/magento $(CMD)
 mg_n98:
 	$(BIN_DOCKER_COMPOSE)  exec --user www-data apache n98-magerun2.phar $(CMD)
 mg_xdebug:
