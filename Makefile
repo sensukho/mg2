@@ -15,7 +15,7 @@ stats:
 ps:
 	$(BIN_DOCKER_COMPOSE) ps
 activity:
-	$(BIN_DOCKER_COMPOSE) logs -f
+	$(BIN_DOCKER_COMPOSE) logs -f --tail=500
 
 #### MAGENTO ACTIONS ####
 mg_in:
