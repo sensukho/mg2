@@ -9,6 +9,8 @@ start:
 	$(BIN_DOCKER_COMPOSE) up -d
 stop:
 	$(BIN_DOCKER_COMPOSE) stop
+restart:
+	$(BIN_DOCKER_COMPOSE) restart
 kill:
 	$(BIN_DOCKER_COMPOSE) down -v
 stats:
