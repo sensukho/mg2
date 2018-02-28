@@ -1,5 +1,6 @@
 #!/bin/bash
 
+VER=2.1
 PROJECT=demo
 CONFIG="setup:install \
 --db-host=db \
@@ -24,8 +25,9 @@ fi
 
 git clone https://github.com/magento/magento2.git src
 cd src
-git checkout 2.1-develop
+git checkout $VER-develop
 git pull origin 2.1-develop
+rm -rf .git .gitignore
 cd ..
 
 make restart
