@@ -29,15 +29,13 @@ git pull origin 2.1-develop
 cd ..
 
 make restart
-make mg_run CMD="sudo chmod -R 777 /var/www"
 make mg_run CMD="composer config repositories.0 composer https://repo.magento.com"
 make mg_run CMD="composer install"
 make mg_run CMD="composer update"
 make mg_exe CMD="sampledata:deploy"
 make mg_exe CMD="$CONFIG"
 make mg_exe CMD="setup:upgrade"
-make mg_run CMD="sudo chmod -R 777 var"
-make mg_run CMD="sudo chmod -R 664 app/etc"
+make mg_run CMD="sudo chmod -R 777 ."
 
 echo "********************************************"
 echo "Your Magento Environment is ready!"

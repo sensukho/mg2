@@ -24,7 +24,7 @@ activity:
 mg_install:
 	./install $(CLONE)
 mg_in:
-	$(BIN_DOCKER_COMPOSE) exec --user root apache bash
+	$(BIN_DOCKER_COMPOSE) exec --user www-data apache bash
 mg_run:
 	$(BIN_DOCKER_COMPOSE) exec --user www-data apache bash -c "$(CMD)"
 mg_exe:
