@@ -43,23 +43,24 @@ Install [Docker](https://docs.docker.com/engine/installation/linux/docker-ce/ubu
 | `mg_composer`  |  Use Composer commands | `make mg_composer CMD=update` |
 | `mg_update`  |  Update DB and flush cache | |
 
+If you want to only environment for a Magento 2 project, use like that:
+
+```
+make create <PROJECT_NAME>
+```
+
 If you want to install the Magento 2, use like that:
 
 ```
-cd <PROJECT-NAME>
-./shell
-rm index.php
-install-magento2
+make new NAME=demo CLONE=1`
 ```
-
-You can specify the version that want install (e.g. `install-magento2 2.2`).
 
 ### Panels
 
 Enjoy your new panels!
 
-**Web server:** http://localhost/
+**Web server:** http://<PROJECT_NAME>/
 
-**PHPMyAdmin:** http://localhost:8080
+**PHPMyAdmin:** http://<PROJECT_NAME>:8080
 
-**Local emails:** http://localhost:8025
+**Local emails:** http://<PROJECT_NAME>:8025
