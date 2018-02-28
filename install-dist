@@ -19,7 +19,7 @@ CONFIG="setup:install \
 --use-rewrites=1"
 
 if [ -d src ]; then
-  sudo rm -rf src;
+  sudo rm -rf src/*.*;
 fi
 
 git clone https://github.com/magento/magento2.git src
