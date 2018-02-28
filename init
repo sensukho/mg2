@@ -11,7 +11,8 @@ cp install-dist install
 sed -i -e "s/<project_name>/$1/g" docker-compose.yml;
 sed -i -e "s/<project_name>/$1/g" install;
 
-if [ ! -e src/index.php ]; then
+if [ ! -d src ]; then
+  mkdir src
   echo "<?php phpinfo();" > src/index.php;
 fi
 
