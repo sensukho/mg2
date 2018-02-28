@@ -36,7 +36,8 @@ make mg_run CMD="composer update"
 make mg_exe CMD="sampledata:deploy"
 make mg_exe CMD="$CONFIG"
 make mg_exe CMD="setup:upgrade"
-sudo chmod -R 664 src/app/etc
+make mg_run CMD="sudo chmod -R 777 var"
+make mg_run CMD="sudo chmod -R 664 app/etc"
 
 echo "********************************************"
 echo "Your Magento Environment is ready!"
