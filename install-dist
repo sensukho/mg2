@@ -26,10 +26,10 @@ git clone https://github.com/magento/magento2.git src
 cd src
 git checkout 2.1-develop
 git pull origin 2.1-develop
-sudo chmod -R 777 var
 cd ..
 
 make restart
+make mg_run CMD="sudo chmod -R 777 /var/www"
 make mg_run CMD="composer config repositories.0 composer https://repo.magento.com"
 make mg_run CMD="composer install"
 make mg_run CMD="composer update"
