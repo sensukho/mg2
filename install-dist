@@ -29,6 +29,8 @@ git checkout $VER-develop
 git pull origin 2.1-develop
 cd ..
 
+mysql -hmariadb -uroot -pSw33th0n3y -e "create database $PROJECT"
+
 make restart
 make mg_run CMD="composer config repositories.0 composer https://repo.magento.com"
 make mg_run CMD="composer install"
