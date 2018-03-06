@@ -23,7 +23,7 @@ if [ -d src ]; then
   sudo rm -rf src/*.*;
 fi
 
-https://github.com/sensukho/magento2.git
+git clone https://github.com/sensukho/magento2.git src
 cd src
 git checkout $VER-develop
 git pull origin 2.1-develop
