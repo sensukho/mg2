@@ -2,6 +2,7 @@ version: '2'
 services:
   apache:
     image: sensukho/mg2-stack:v3
+    container_name: apache
     ports:
       - "80:80"
       - "9001:9000"
