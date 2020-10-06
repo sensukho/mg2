@@ -1,49 +1,50 @@
 #!/bin/bash
+if [[ $2 -eq 1 ]]; then
+	VER=2.3
+	PROJECT=$1
+	CONFIG="setup:install \
+	--db-host=db \
+	--db-name=$PROJECT \
+	--db-user=root \
+	--db-password=Sw33th0n3y \
+	--admin-firstname=Magento \
+	--admin-lastname=$PROJECT \
+	--admin-email=$PROJECT@example.com \
+	--admin-user=admin \
+	--admin-password=admin123 \
+	--backend-frontname=admin \
+	--base-url=http://$PROJECT.test \
+	--language=en_US \
+	--currency=USD \
+	--timezone=America/Mexico_City \
+	--use-rewrites=1"
 
-VER=2.1
-PROJECT=demo
-CONFIG="setup:install \
---db-host=db \
---db-name=$PROJECT \
---db-user=root \
---db-password=Sw33th0n3y \
---admin-firstname=Magento \
---admin-lastname=$PROJECT \
---admin-email=$PROJECT@example.com \
---admin-user=admin \
---admin-password=admin123 \
---backend-frontname=admin \
---base-url=http://$PROJECT.test \
---language=en_US \
---currency=USD \
---timezone=America/Mexico_City \
---use-rewrites=1"
+	if [ -d src ]; then
+	  sudo rm -rf src/*.*;
+	fi
 
-if [ -d src ]; then
-  sudo rm -rf src/*.*;
+	git clone https://github.com/sensukho/magento2.git src
+	cd src
+	git checkout $VER-develop
+	git pull origin $VER-develop
+	cd ..
+
+	mysql -hmariadb -uroot -pSw33th0n3y -e "create database $PROJECT"
+
+	make restart
+	make mg_run CMD="composer config repositories.0 composer https://repo.magento.com"
+	make mg_run CMD="composer install"
+	make mg_run CMD="composer update"
+	make mg_exe CMD="sampledata:deploy"
+	make mg_exe CMD="$CONFIG"
+	make mg_exe CMD="setup:upgrade"
+	make mg_run CMD="chmod -R 777 ."
+
+	echo "********************************************"
+	echo "Your Magento Environment is ready!"
+	echo "SITE_URL: http://$PROJECT.test"
+	echo "ADMIN_URL: http://$PROJECT.test/admin"
+	echo "ADMIN_USER: admin"
+	echo "ADIN_PASS: admin123"
+	echo "********************************************"
 fi
-
-git clone https://github.com/sensukho/magento2.git src
-cd src
-git checkout $VER-develop
-git pull origin 2.1-develop
-cd ..
-
-mysql -hmariadb -uroot -pSw33th0n3y -e "create database $PROJECT"
-
-make restart
-make mg_run CMD="composer config repositories.0 composer https://repo.magento.com"
-make mg_run CMD="composer install"
-make mg_run CMD="composer update"
-make mg_exe CMD="sampledata:deploy"
-make mg_exe CMD="$CONFIG"
-make mg_exe CMD="setup:upgrade"
-make mg_run CMD="chmod -R 777 ."
-
-echo "********************************************"
-echo "Your Magento Environment is ready!"
-echo "SITE_URL: http://$PROJECT.test"
-echo "ADMIN_URL: http://$PROJECT.test/admin"
-echo "ADMIN_USER: admin"
-echo "ADIN_PASS: admin123"
-echo "********************************************"

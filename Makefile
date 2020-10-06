@@ -22,7 +22,7 @@ activity:
 
 #### MAGENTO ACTIONS ####
 mg_install:
-	./install $(CLONE)
+	./install $(NAME) $(CLONE)
 mg_in:
 	$(BIN_DOCKER_COMPOSE) exec --user www-data apache bash
 mg_run:

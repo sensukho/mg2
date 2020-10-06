@@ -1,119 +1,213 @@
-FROM php:7.0-apache
+FROM php:7.2-fpm-buster
+ARG GOSU_VERSION=1.11
 
 MAINTAINER JC Gil <sensukho@gmail.com>
 
-ENV XDEBUG_PORT 9000
+ENV PHP_MEMORY_LIMIT 2G
+ENV MAGENTO_ROOT /app
+ENV DEBUG false
+ENV MAGENTO_RUN_MODE production
+ENV UPLOAD_MAX_FILESIZE 64M
+ENV UPDATE_UID_GID false
+ENV ENABLE_SENDMAIL true
+ENV SET_DOCKER_HOST false
 
-# Install System Dependencies
+ENV PHP_EXTENSIONS bcmath bz2 calendar exif gd gettext intl mysqli opcache pdo_mysql redis soap sockets sysvmsg sysvsem sysvshm xsl zip pcntl
 
+# Install dependencies
 RUN apt-get update \
-	&& DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-	software-properties-common \
-	python-software-properties \
-	&& apt-get update \
-	&& DEBIAN_FRONTEND=noninteractive apt-get install -y \
-	libfreetype6-dev \
-	libicu-dev \
-  	libssl-dev \
-	libjpeg62-turbo-dev \
-	libmcrypt-dev \
-	libpng12-dev \
-	libedit-dev \
-	libedit2 \
-	libxslt1-dev \
-	apt-utils \
-  	mysql-client \
-	git \
-	vim \
-	wget \
-	curl \
-	lynx \
-	psmisc \
-	unzip \
-	tar \
-	cron \
-	bash-completion \
-	&& apt-get clean
+  && apt-get upgrade -y \
+  && apt-get install -y --no-install-recommends \
+  apt-utils \
+  sendmail-bin \
+  sendmail \
+  sudo \
+  libbz2-dev \
+  libjpeg62-turbo-dev \
+  libpng-dev \
+  libfreetype6-dev \
+  libgeoip-dev \
+  wget \
+  libgmp-dev \
+  libgpgme11-dev \
+  libmagickwand-dev \
+  libmagickcore-dev \
+  libc-client-dev \
+  libkrb5-dev \
+  libicu-dev \
+  libldap2-dev \
+  libpspell-dev \
+  librecode0 \
+  librecode-dev \
+  libssh2-1 \
+  libssh2-1-dev \
+  libtidy-dev \
+  libxslt1-dev \
+  libyaml-dev \
+  libzip-dev \
+  zip \
+  && rm -rf /var/lib/apt/lists/*
 
-# Install Magento Dependencies
+# Install MailHog
+RUN wget https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 \
+    && sudo chmod +x mhsendmail_linux_amd64 \
+    && sudo mv mhsendmail_linux_amd64 /usr/local/bin/mhsendmail
 
+# Configure the gd library
 RUN docker-php-ext-configure \
-  	gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/; \
-  	docker-php-ext-install \
-  	opcache \
-  	gd \
-  	bcmath \
-  	intl \
-  	mbstring \
-  	mcrypt \
-  	pdo_mysql \
-  	soap \
-  	xsl \
-  	zip
+  gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+RUN docker-php-ext-configure \
+  imap --with-kerberos --with-imap-ssl
+RUN docker-php-ext-configure \
+  ldap --with-libdir=lib/x86_64-linux-gnu
+RUN docker-php-ext-configure \
+  opcache --enable-opcache
+RUN docker-php-ext-configure \
+  zip --with-libzip
 
-# Install oAuth
+# Install required PHP extensions
+RUN docker-php-ext-install -j$(nproc) \
+  bcmath \
+  bz2 \
+  calendar \
+  exif \
+  gd \
+  gettext \
+  gmp \
+  imap \
+  intl \
+  ldap \
+  mysqli \
+  opcache \
+  pdo_mysql \
+  pspell \
+  recode \
+  shmop \
+  soap \
+  sockets \
+  sysvmsg \
+  sysvsem \
+  sysvshm \
+  tidy \
+  xmlrpc \
+  xsl \
+  zip \
+  pcntl
 
-RUN apt-get update \
-  	&& apt-get install -y \
-  	libpcre3 \
-  	libpcre3-dev \
-  	# php-pear \
-  	&& pecl install oauth \
-  	&& echo "extension=oauth.so" > /usr/local/etc/php/conf.d/docker-php-ext-oauth.ini
+RUN pecl install -o -f \
+  geoip-1.1.1 \
+  gnupg \
+  igbinary \
+  imagick \
+  mailparse \
+  msgpack \
+  oauth \
+  pcov \
+  propro \
+  raphf \
+  redis \
+  ssh2-1.1.2 \
+  xdebug-2.6.1 \
+  yaml
 
-# Install Node, NVM, NPM and Grunt
+RUN curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
+  && mkdir -p /tmp/blackfire \
+  && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp/blackfire \
+  && mv /tmp/blackfire/blackfire-*.so $(php -r "echo ini_get ('extension_dir');")/blackfire.so \
+  && ( echo extension=blackfire.so \
+  && echo blackfire.agent_socket=tcp://blackfire:8707 ) > $(php -i | grep "additional .ini" | awk '{print $9}')/blackfire.ini \
+  && rm -rf /tmp/blackfire /tmp/blackfire-probe.tar.gz
+RUN rm -f /usr/local/etc/php/conf.d/*sodium.ini \
+  && rm -f /usr/local/lib/php/extensions/*/*sodium.so \
+  && apt-get remove libsodium* -y  \
+  && mkdir -p /tmp/libsodium  \
+  && curl -sL https://github.com/jedisct1/libsodium/archive/1.0.18-RELEASE.tar.gz | tar xzf - -C  /tmp/libsodium \
+  && cd /tmp/libsodium/libsodium-1.0.18-RELEASE/ \
+  && ./configure \
+  && make && make check \
+  && make install  \
+  && cd / \
+  && rm -rf /tmp/libsodium  \
+  && pecl install -o -f libsodium
+RUN cd /tmp \
+  && curl -O https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz \
+  && tar zxvf ioncube_loaders_lin_x86-64.tar.gz \
+  && export PHP_VERSION=$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;") \
+  && export PHP_EXT_DIR=$(php-config --extension-dir) \
+  && cp "./ioncube/ioncube_loader_lin_${PHP_VERSION}.so" "${PHP_EXT_DIR}/ioncube.so" \
+  && rm -rf ./ioncube \
+  && rm ioncube_loaders_lin_x86-64.tar.gz
 
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
-  	&& apt-get install -y nodejs build-essential \
-    && curl https://raw.githubusercontent.com/creationix/nvm/v0.16.1/install.sh | sh \
-    && npm i -g grunt-cli yarn
+RUN docker-php-ext-enable \
+  bcmath \
+  blackfire \
+  bz2 \
+  calendar \
+  exif \
+  gd \
+  geoip \
+  gettext \
+  gmp \
+  gnupg \
+  igbinary \
+  imagick \
+  imap \
+  intl \
+  ldap \
+  mailparse \
+  msgpack \
+  mysqli \
+  oauth \
+  opcache \
+  pcov \
+  pdo_mysql \
+  propro \
+  pspell \
+  raphf \
+  recode \
+  redis \
+  shmop \
+  soap \
+  sockets \
+  sodium \
+  ssh2 \
+  sysvmsg \
+  sysvsem \
+  sysvshm \
+  tidy \
+  xdebug \
+  xmlrpc \
+  xsl \
+  yaml \
+  zip \
+  pcntl \
+  ioncube
 
-# Install Composer
+RUN groupadd -g 1000 www && useradd -g 1000 -u 1000 -d ${MAGENTO_ROOT} -s /bin/bash www
 
-RUN	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
-RUN composer global require hirak/prestissimo
+COPY etc/php-fpm.ini /usr/local/etc/php/conf.d/zz-magento.ini
+COPY etc/php-xdebug.ini /usr/local/etc/php/conf.d/zz-xdebug-settings.ini
+#COPY etc/php-pcov.ini /usr/local/etc/php/conf.d/zz-pcov-settings.ini
+COPY etc/mail.ini /usr/local/etc/php/conf.d/zz-mail.ini
+COPY etc/php-fpm.conf /usr/local/etc/
+#COPY etc/php-gnupg.ini /usr/local/etc/php/conf.d/gnupg.ini
 
-# Install XDebug
+COPY fpm-healthcheck.sh /usr/local/bin/fpm-healthcheck.sh
+RUN ["chmod", "+x", "/usr/local/bin/fpm-healthcheck.sh"]
 
-RUN yes | pecl install xdebug && \
-	 echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.iniOLD
+HEALTHCHECK --retries=3 CMD ["bash", "/usr/local/bin/fpm-healthcheck.sh"]
 
-# Install Mhsendmail
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN ["chmod", "+x", "/docker-entrypoint.sh"]
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install golang-go \
-   && mkdir /opt/go \
-   && export GOPATH=/opt/go \
-   && go get github.com/mailhog/mhsendmail
+RUN mkdir -p ${MAGENTO_ROOT}
 
-# Install Magerun 2
+VOLUME ${MAGENTO_ROOT}
 
-RUN wget https://files.magerun.net/n98-magerun2.phar \
-	&& chmod +x ./n98-magerun2.phar \
-	&& mv ./n98-magerun2.phar /usr/local/bin/
+ENTRYPOINT ["/docker-entrypoint.sh"]
 
-# Configuring system
+USER root
 
-ADD .docker/config/php.ini /usr/local/etc/php/php.ini
-ADD .docker/config/magento.conf /etc/apache2/sites-available/magento.conf
-ADD .docker/config/custom-xdebug.ini /usr/local/etc/php/conf.d/custom-xdebug.ini
-COPY .docker/bin/* /usr/local/bin/
-COPY .docker/users/* /var/www/
-RUN chmod +x /usr/local/bin/*
-RUN ln -s /etc/apache2/sites-available/magento.conf /etc/apache2/sites-enabled/magento.conf
+WORKDIR ${MAGENTO_ROOT}
 
-RUN curl -o /etc/bash_completion.d/m2install-bash-completion https://raw.githubusercontent.com/yvoronoy/m2install/master/m2install-bash-completion
-RUN curl -o /etc/bash_completion.d/n98-magerun2.phar.bash https://raw.githubusercontent.com/netz98/n98-magerun2/master/res/autocompletion/bash/n98-magerun2.phar.bash
-RUN echo "source /etc/bash_completion" >> /root/.bashrc
-RUN echo "source /etc/bash_completion" >> /var/www/.bashrc
-
-RUN chmod 777 -Rf /var/www /var/www/.* \
-	&& chown -Rf www-data:www-data /var/www /var/www/.* \
-	&& usermod -u 1000 www-data \
-	&& chsh -s /bin/bash www-data\
-	&& a2enmod rewrite \
-	&& a2enmod headers
-
-RUN setup-cron
-
-VOLUME /var/www/html
-WORKDIR /var/www/html
+CMD ["php-fpm", "-R"]
