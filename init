@@ -17,5 +17,3 @@ if [ ! -d src ]; then
 fi
 
 sudo chmod -R 777 src
-
-make start

@@ -185,12 +185,17 @@ RUN docker-php-ext-enable \
 
 RUN groupadd -g 1000 www && useradd -g 1000 -u 1000 -d ${MAGENTO_ROOT} -s /bin/bash www
 
+RUN cd ~
+RUN curl -sS https://getcomposer.org/installer -o composer-setup.php
+RUN HASH='curl -sS https://composer.github.io/installer.sig'
+RUN php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+RUN composer
+
 COPY etc/php-fpm.ini /usr/local/etc/php/conf.d/zz-magento.ini
 COPY etc/php-xdebug.ini /usr/local/etc/php/conf.d/zz-xdebug-settings.ini
-#COPY etc/php-pcov.ini /usr/local/etc/php/conf.d/zz-pcov-settings.ini
 COPY etc/mail.ini /usr/local/etc/php/conf.d/zz-mail.ini
 COPY etc/php-fpm.conf /usr/local/etc/
-#COPY etc/php-gnupg.ini /usr/local/etc/php/conf.d/gnupg.ini
 
 COPY fpm-healthcheck.sh /usr/local/bin/fpm-healthcheck.sh
 RUN ["chmod", "+x", "/usr/local/bin/fpm-healthcheck.sh"]
