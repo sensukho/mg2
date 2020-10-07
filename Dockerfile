@@ -6,7 +6,7 @@ MAINTAINER JC Gil <sensukho@gmail.com>
 ENV PHP_MEMORY_LIMIT 2G
 ENV MAGENTO_ROOT /app
 ENV DEBUG false
-ENV MAGENTO_RUN_MODE production
+ENV MAGENTO_RUN_MODE developer
 ENV UPLOAD_MAX_FILESIZE 64M
 ENV UPDATE_UID_GID false
 ENV ENABLE_SENDMAIL true
@@ -187,8 +187,8 @@ RUN groupadd -g 1000 www && useradd -g 1000 -u 1000 -d ${MAGENTO_ROOT} -s /bin/b
 
 RUN cd ~
 RUN curl -sS https://getcomposer.org/installer -o composer-setup.php
-RUN HASH='curl -sS https://composer.github.io/installer.sig'
-RUN php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+#RUN export HASH='curl -sS https://composer.github.io/installer.sig'
+#RUN php -r "if (hash_file('SHA384', 'composer-setup.php') === 'curl -sS https://composer.github.io/installer.sig') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 RUN composer
 
