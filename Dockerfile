@@ -1,4 +1,4 @@
-FROM php:7.2-fpm-buster
+FROM php:7.2-apache-buster
 ARG GOSU_VERSION=1.11
 
 MAINTAINER JC Gil <sensukho@gmail.com>
@@ -187,8 +187,6 @@ RUN groupadd -g 1000 www && useradd -g 1000 -u 1000 -d ${MAGENTO_ROOT} -s /bin/b
 
 RUN cd ~
 RUN curl -sS https://getcomposer.org/installer -o composer-setup.php
-#RUN export HASH='curl -sS https://composer.github.io/installer.sig'
-#RUN php -r "if (hash_file('SHA384', 'composer-setup.php') === 'curl -sS https://composer.github.io/installer.sig') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 RUN composer
 
@@ -197,10 +195,7 @@ COPY etc/php-xdebug.ini /usr/local/etc/php/conf.d/zz-xdebug-settings.ini
 COPY etc/mail.ini /usr/local/etc/php/conf.d/zz-mail.ini
 COPY etc/php-fpm.conf /usr/local/etc/
 
-COPY fpm-healthcheck.sh /usr/local/bin/fpm-healthcheck.sh
-RUN ["chmod", "+x", "/usr/local/bin/fpm-healthcheck.sh"]
-
-HEALTHCHECK --retries=3 CMD ["bash", "/usr/local/bin/fpm-healthcheck.sh"]
+RUN a2enmod rewrite
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN ["chmod", "+x", "/docker-entrypoint.sh"]

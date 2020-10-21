@@ -24,9 +24,9 @@ activity:
 mg_install:
 	./install $(NAME) $(CLONE)
 mg_in:
-	$(BIN_DOCKER_COMPOSE) exec --user www-data apache bash
+	$(BIN_DOCKER_COMPOSE) exec --user root apache bash
 mg_run:
-	$(BIN_DOCKER_COMPOSE) exec --user www-data apache bash -c "$(CMD)"
+	$(BIN_DOCKER_COMPOSE) exec --user root apache bash -c "$(CMD)"
 mg_exe:
 	$(BIN_DOCKER_COMPOSE) exec --user www-data apache bin/magento $(CMD)
 mg_n98:
@@ -34,6 +34,6 @@ mg_n98:
 mg_xdebug:
 	$(BIN_DOCKER_COMPOSE) exec --user root apache xdebug
 mg_composer:
-	$(BIN_DOCKER_COMPOSE) exec --user www-data apache composer $(CMD)
+	$(BIN_DOCKER_COMPOSE) exec --user root apache composer $(CMD)
 mg_update:
 	$(BIN_DOCKER_COMPOSE) exec --user root apache bash -c "php -f bin/magento setup:upgrade; php -f bin/magento cache:flush; chmod -R 777 ."
