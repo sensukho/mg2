@@ -38,6 +38,7 @@ if [[ $2 -eq 1 ]]; then
 	make mg_run CMD="composer install"
 	make mg_run CMD="composer update"
 	make mg_exe CMD="sampledata:deploy"
+	make mg_run CMD="composer update"
 	make mg_exe CMD="$CONFIG"
 	make mg_exe CMD="setup:upgrade"
 
