@@ -2,7 +2,6 @@ version: '2'
 services:
   apache:
     image: sensukho/mg2-stack:v3
-    container_name: <project_name>-apache
     ports:
       - "80:80"
       - "9001:9000"
@@ -15,8 +14,10 @@ services:
       PHP_IDE_CONFIG: "serverName=Docker"
     depends_on:
       - db
+      - elasticsearch
     links:
       - db
+      - elasticsearch
     networks:
       - <project_name>-network
 
@@ -31,6 +32,25 @@ services:
       - MYSQL_PASSWORD=u546u132
     volumes:
       - dbdata:/var/lib/mysql
+    networks:
+      - <project_name>-network
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    environment:
+      - node.name=elasticsearch
+      - cluster.name=elasticsearch 
+      - bootstrap.memory_lock=true
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./elasticsearchdata:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
     networks:
       - <project_name>-network
 
