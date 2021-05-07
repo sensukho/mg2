@@ -1,6 +1,6 @@
 #!/bin/bash
 if [[ $2 -eq 1 ]]; then
-	VER=2.3
+	VER=2.4
 	PROJECT=$1
 	CONFIG="setup:install \
 	--db-host=db \

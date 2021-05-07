@@ -4,7 +4,7 @@ git config --global core.fileMode false
 
 sudo chmod -R u+x ./*
 
-docker image pull sensukho/mg2-stack:v3
+docker image pull sensukho/mg2-stack:v4
 
 cp docker-compose-dis.yml docker-compose.yml
 cp install-dist install
